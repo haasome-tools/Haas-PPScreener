@@ -97,10 +97,10 @@ The Bot also supports additional configuration options that are listed below.
 # In order to backtest a market haas must first download the market information
 # To stream line our backtesting and avoid issues we can set this to true to
 # Force haas to download market data before performing our testing.
-# Default is set to false.
-"CollectDataFirst":false
+# Default is set to true.
+"CollectDataFirst":true
 
 # For convience and history we have the option to log everything to a file
 # Default is True
-"WriteToFile":false
+"WriteToFile":true
 ```
