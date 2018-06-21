@@ -1,14 +1,47 @@
 # Haas-PPScreener
-A PingPong Bot Screen For Haasonline
+```
+___  ___  ____ ____ ____ ____ ____ _  _ ____ ____
+|__] |__] [__  |    |__/ |___ |___ |\ | |___ |__/
+|    |    ___] |___ |  \ |___ |___ | \| |___ |  \
+```
 
-Code to bruteforce crypto scalping pairs via backtesting
+A PingPong Bot Screen For Haasonline.
 
-Make sure you have your local api server setup for haas [Link To Wiki](https://wiki.haasonline.com/Local_API_Server)
+### Use Case
+This tool allows a individual to rapdily test the ping pong bot startegy across an entire
+market place while only keeping the profitable bots.
 
-After that just follow the instructions in the app.. More documentation to come.
+### Requirments
+* Haasonline Trading Software
+* The Haas Local API Setup [Link To Wiki](https://wiki.haasonline.com/Local_API_Server)
+* Basic common sense
 
-SPECIAL: This bot has a different setting requirment along side the account guid you want to use you will need to specify the 
-"ExchangeSelection" setting. The below values are avalible. You need the exchange to match the account you are using. 
+### Setup
+First you will want to open the PPScreen.json file and update the following settings to match
+what you set in the Haas Interface.
+
+```
+"IPAddress":"127.0.0.1"
+"Port":8096
+"Secret":"SomeSecretHere"
+```
+
+Second once you have ran the software and the credential check passes the software will present
+you with a list of accounts and the GUID associated. You will want to pick the simulated account
+connected to the exchange you want to test. Modify the Following parameter in the PPScreener.json
+
+```
+"AccountGUID":"ReplaceMeWithGuid"
+```
+
+Finally you will need to select the correct exchange for the bot to test against. You want this to
+be the same exchange associated with the account guid you have selected. Modify the following settings
+
+```
+"ExchangeSelection":1
+```
+
+With one of the following values to match your exchange.
 
 ```
 Bitfinex = 1
@@ -33,8 +66,39 @@ Huobi = 26
 KuCoin = 27
 ```
 
-Special: You can also tell the bot to not load markets at first run by modifying the "CollectDataFirst" to either be "true" or "false". Default for built is true.
+### Additional Configuration
 
-Note: Make sure to delete your bot after each run or you will get werid results.
+The Bot also supports additional configuration options that are listed below.
 
-Note: IF YOU DO NOT ALREADY HAVE THE MARKET DATA DOWNLOADED THE BOT MIGHT MISS SOME BACKTEST. FOR NEW MARKETS OPEN THE MARKET VIEW AND VIEW AS FAR BACK HAS YOU PLAN ON BACKTESTING.
+```
+# The delay between each BackTest in seconds. By default this is set to 1 second.
+# You can increase this if you have a slower machine and need a longer delay between test.
+# Note: If you decrease these please ensure you have a fast enough machine
+"DelayBTInMiliseconds":1000
+
+# The Keep Threshold is what percentage does the backtest ROI have to be higher than
+# In order for the bot to not be automatically deleted. Default is 2%
+"KeepThreshold":2.0
+
+# The PrimarySecondaryCurrency (Yeah the name sucks) this is the base coin for the market
+# For example this can be BTC,ETH,LTC,BNB,ETC
+"PrimarySecondaryCurrency":"BTC"
+
+# This is the fee to be used when calculating the ROI and setting up the bot
+# By default its set to 0.1% (Binance)
+"Fee":0.1
+
+# This is the timeframe to backtest in minutes.
+# By default it is set to 1 day.
+"MinutesToBackTest":1440
+
+# In order to backtest a market haas must first download the market information
+# To stream line our backtesting and avoid issues we can set this to true to
+# Force haas to download market data before performing our testing.
+# Default is set to false.
+"CollectDataFirst":false
+
+# For convience and history we have the option to log everything to a file
+# Default is True
+"WriteToFile":false
+```
