@@ -1,1 +1,1 @@
-{"DelayBTInMiliseconds":1000,"IPAddress":"127.0.0.1","Port":8096,"Secret":"SomeSecretHere","PrimarySecondaryCurrency":"BTC","AccountGUID":"ReplaceMeWithGuid","Fee":0.1,"ExchangeSelection":1,"MinutesToBackTest":1440,"CollectDataFirst":false}
+{"DelayBTInMiliseconds":1000,"KeepThreshold":2.0,"IPAddress":"127.0.0.1","Port":8096,"Secret":"SomeSecretHere","PrimarySecondaryCurrency":"BTC","AccountGUID":"ReplaceMeWithGuid","Fee":0.1,"ExchangeSelection":1,"MinutesToBackTest":1440,"CollectDataFirst":true,"WriteToFile":true}

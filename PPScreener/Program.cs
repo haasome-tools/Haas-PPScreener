@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.IO;
@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using Haasonline.Public.LocalApi.CSharp;
 using Haasonline.Public.LocalApi.CSharp.Enums;
 
-namespace PPScreener
+namespace PPScreener 
 {
 
     public class PPScrenerConfig
@@ -21,9 +21,11 @@ namespace PPScreener
         
         public decimal Fee { get; set; } = 0.1m;
         public int DelayBTInMiliseconds = 1000;
+        public decimal KeepThreshold = 2.0m;
         public int ExchangeSelection { get; set; } = 1;
         public int MinutesToBackTest { get; set; } = 1440;
         public bool CollectDataFirst { get; set; } = false;
+        public bool WriteToFile { get; set; } = false;
 
     }
 
@@ -31,6 +33,7 @@ namespace PPScreener
     {
 
         public static string configFileName = "PPScreener.json";
+        public static string logFileName = "PPLog.log";
 
         public static PPScrenerConfig mainConfig;
 
@@ -150,52 +153,71 @@ namespace PPScreener
                         // YES YES I KNOW THIS IS BAD BUT I WAS LAZY
                         LoadChartsFirst:
 
-                        foreach (string market in marketsToList)
+                        using (StreamWriter logStream = new StreamWriter(logFileName))
                         {
-                            string botName = "PP-" + market + ":" + mainConfig.PrimarySecondaryCurrency;
 
-                            var newBot = haasonlineClient.CustomBotApi.NewBot(Haasonline.Public.LocalApi.CSharp.Enums.EnumCustomBotType.PingPongBot, botName, workingAccountGUID, market, mainConfig.PrimarySecondaryCurrency, "");
-                            Thread.Sleep(1000);
-                            var allBots = haasonlineClient.CustomBotApi.GetAllBots();
+                            logStream.AutoFlush = true;
 
-                            if (mainConfig.CollectDataFirst.Equals(false))
+                            foreach (string market in marketsToList)
                             {
-                                Console.WriteLine("[*] Currently Testing: {0}:{1}", market, mainConfig.PrimarySecondaryCurrency);
-                            } else
-                            {
-                                Console.Write("\r[*] Currently Loading Market: {0} - {1}", count, marketsToList.Count);
-                            }
+                                string botName = "PP-" + market + ":" + mainConfig.PrimarySecondaryCurrency;
 
-                            // Find the Bot guid
-                            foreach (var bot in allBots.Result.Result)
-                            {
-                                if (bot.Name.Equals(botName))
+                                var newBot = haasonlineClient.CustomBotApi.NewBot(Haasonline.Public.LocalApi.CSharp.Enums.EnumCustomBotType.PingPongBot, botName, workingAccountGUID, market, mainConfig.PrimarySecondaryCurrency, "");
+                                Thread.Sleep(1000);
+                                var allBots = haasonlineClient.CustomBotApi.GetAllBots();
+
+                                if (mainConfig.CollectDataFirst.Equals(false))
                                 {
-                                    count = count + 1;
+                                    Console.WriteLine("[*] Currently Testing: {0}:{1}", market, mainConfig.PrimarySecondaryCurrency);
+                                }
+                                else
+                                {
+                                    Console.Write("\r[*] Currently Loading Market: {0} - {1}", count, marketsToList.Count);
+                                }
 
-                                    var setupScalpBot = haasonlineClient.CustomBotApi.SetupPingPongBot(bot.GUID, bot.Name, workingAccountGUID, market, mainConfig.PrimarySecondaryCurrency, "", 0, 1000, mainConfig.Fee, mainConfig.PrimarySecondaryCurrency);
-                                    var backtestBot = haasonlineClient.CustomBotApi.BacktestBot<Haasonline.Public.LocalApi.CSharp.DataObjects.CustomBots.BaseCustomBot>(bot.GUID, mainConfig.MinutesToBackTest);
-                                    Thread.Sleep(mainConfig.DelayBTInMiliseconds);
-                                    var botResults = haasonlineClient.CustomBotApi.GetBot<Haasonline.Public.LocalApi.CSharp.DataObjects.CustomBots.BaseCustomBot>(bot.GUID);
-
-                                    if (mainConfig.CollectDataFirst.Equals(false))
+                                // Find the Bot guid
+                                foreach (var bot in allBots.Result.Result)
+                                {
+                                    if (bot.Name.Equals(botName))
                                     {
-                                        if (botResults.Result.Result.ROI > 0.0m)
+                                        count = count + 1;
+
+                                        var setupScalpBot = haasonlineClient.CustomBotApi.SetupPingPongBot(bot.GUID, bot.Name, workingAccountGUID, market, mainConfig.PrimarySecondaryCurrency, "", 0, 1000, mainConfig.Fee, mainConfig.PrimarySecondaryCurrency);
+                                        var backtestBot = haasonlineClient.CustomBotApi.BacktestBot<Haasonline.Public.LocalApi.CSharp.DataObjects.CustomBots.BaseCustomBot>(bot.GUID, mainConfig.MinutesToBackTest);
+                                        Thread.Sleep(mainConfig.DelayBTInMiliseconds);
+                                        var botResults = haasonlineClient.CustomBotApi.GetBot<Haasonline.Public.LocalApi.CSharp.DataObjects.CustomBots.BaseCustomBot>(bot.GUID);
+
+                                        if (mainConfig.CollectDataFirst.Equals(false))
                                         {
-                                            Console.WriteLine("[*] {0} - ROI: {1:N4}%", botName, botResults.Result.Result.ROI);
+
+                                            string result = "";
+
+                                            if (botResults.Result.Result.ROI > mainConfig.KeepThreshold)
+                                            {   
+                                                result = string.Format("[*] {0} - ROI: {1:N4}%", botName, botResults.Result.Result.ROI);
+                                            }
+                                            else
+                                            {
+                                                result = string.Format("[*] {0} - ROI: {1:N4}% - Automatically Deleted", botName, botResults.Result.Result.ROI);
+                                                haasonlineClient.CustomBotApi.RemoveBot(bot.GUID);
+                                            }
+
+                                            Console.WriteLine(result);
+
+                                            if (mainConfig.WriteToFile)
+                                            {
+                                                logStream.WriteLine(result);
+                                            }
                                         }
                                         else
                                         {
-                                            Console.WriteLine("[*] {0} - ROI: {1:N4}% - Automatically Deleted", botName, botResults.Result.Result.ROI);
                                             haasonlineClient.CustomBotApi.RemoveBot(bot.GUID);
                                         }
-                                    } else
-                                    {
-                                        haasonlineClient.CustomBotApi.RemoveBot(bot.GUID);
                                     }
                                 }
                             }
                         }
+
 
                         count = 0;
                         if (mainConfig.CollectDataFirst)
@@ -222,3 +244,4 @@ namespace PPScreener
         }
     }
 }
+
