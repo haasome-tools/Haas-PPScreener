@@ -76,7 +76,7 @@ The Bot also supports additional configuration options that are listed below.
 # The delay between each BackTest in seconds. By default this is set to 1 second.
 # You can increase this if you have a slower machine and need a longer delay between test.
 # Note: If you decrease these please ensure you have a fast enough machine
-"DelayBTInMiliseconds":1000
+"DelayBTInMiliseconds":3000
 
 # The Keep Threshold is what percentage does the backtest ROI have to be higher than
 # In order for the bot to not be automatically deleted. Default is 2%
@@ -95,10 +95,9 @@ The Bot also supports additional configuration options that are listed below.
 "MinutesToBackTest":1440
 
 # In order to backtest a market haas must first download the market information
-# To stream line our backtesting and avoid issues we can set this to true to
 # Force haas to download market data before performing our testing.
-# Default is set to true.
-"CollectDataFirst":true
+# Default is set to false.
+"CollectDataFirst":false
 
 # For convience and history we have the option to log everything to a file
 # Default is True
