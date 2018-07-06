@@ -274,7 +274,9 @@ namespace PPScreener
 
         public static void CreatePersistentBot(string market)
         {
-            string botName = "PP-" + market + ":" + ActionManager.mainConfig.PrimaryCurrency;
+            string[] accountGuidSplit = ActionManager.mainConfig.AccountGUID.Split('-');
+
+            string botName = "PP-" + accountGuidSplit[0] + "-" + market + ":" + ActionManager.mainConfig.PrimaryCurrency;
 
             HaasonlineClient haasonlineClient = new HaasonlineClient(ActionManager.mainConfig.IPAddress, ActionManager.mainConfig.Port, ActionManager.mainConfig.Secret);
 
