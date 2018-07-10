@@ -9,7 +9,6 @@ In order for the software to work you need to setup the API portion of your haas
 
 Example:
 
-
 ![LocalApi](https://i.imgur.com/K61gNx3.png)
 
 First download the zipfile of the newest release to your haas server/pc. Extract it to a folder and run the exe file now see the instructions below in this document
@@ -35,6 +34,7 @@ set-config secret your-local-api-secret-here
 ```
 
 Example Output:
+
 ![ExampleSetupOutput](https://i.imgur.com/tsqvE7c.png)
 
 Now Test your settings to ensure connection is succesfull
@@ -56,6 +56,7 @@ show-accounts
 ```
 
 Example Output:
+
 ![ExampleShowAccounts](https://i.imgur.com/uSEYdFC.png)
 
 Then we select an account
@@ -66,6 +67,7 @@ set-account type-the-account-index-number
 ```
 
 Example Output:
+
 ![ExampleSelectAccount](https://i.imgur.com/tR2OWWg.png)
 
 Here you set the ROI (return on investment) target the backtested bots must reach before the automatically created and tested bots this program creates will keep the bots (that reached the target after testing) in your botlist under Ping Pong bots. Note you have to type a % of your choosing, this example is 3% but you can type decimals as well like 2.5
