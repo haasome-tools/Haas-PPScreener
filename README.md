@@ -1,105 +1,128 @@
-# Haas-PPScreener
-```
-___  ___  ____ ____ ____ ____ ____ _  _ ____ ____
-|__] |__] [__  |    |__/ |___ |___ |\ | |___ |__/
-|    |    ___] |___ |  \ |___ |___ | \| |___ |  \
-```
+### PPScreener - Haasonline PingPong Bot Screener
+##### Documentation Author: Commissarr
 
-A PingPong Bot Screen For Haasonline.
+The PPScreener is designed to test every possible market on an exchange by testing each coin traded against the specified primarycurrency (BasePair). For Example if we point it at Binance and use BTC. It will test every pair ada/btc,bnb/btc, etc so on so forth.
 
-![PPScreener Image](https://i.imgur.com/cNb1ieB.png)
+#### Preperation In Haas Server
 
-### Use Case
-This tool allows a individual to rapdily test the ping pong bot startegy across an entire
-market place while only keeping the profitable bots.
+In order for the software to work you need to setup the API portion of your haas software. Here is some helpful information from the wiki: [Wiki Link](https://wiki.haasonline.com/Local_API_Server) Remember that all three fields need to be populated even if it looks like the greyed out information there was typed. If you didn't type it yourself it won't work.
 
-### Requirments
-* Haasonline Trading Software
-* The Haas Local API Setup [Link To Wiki](https://wiki.haasonline.com/Local_API_Server)
-* Basic common sense
+Example:
 
-### Setup
-First you will want to open the PPScreen.json file and update the following settings to match
-what you set in the Haas Interface.
+
+![LocalApi](https://i.imgur.com/K61gNx3.png)
+
+First download the zipfile of the newest release to your haas server/pc. Extract it to a folder and run the exe file now see the instructions below in this document
 
 ```
-"IPAddress":"127.0.0.1"
-"Port":8096
-"Secret":"SomeSecretHere"
+Note: before exiting the program type the following to save your settings:
+save-config
 ```
 
-Second once you have ran the software and the credential check passes the software will present
-you with a list of accounts and the GUID associated. You will want to pick the simulated account
-connected to the exchange you want to test. Modify the Following parameter in the PPScreener.json
+#### General Configuration
+
+Now to Setup the local api information
 
 ```
-"AccountGUID":"ReplaceMeWithGuid"
+# Set your local api ipaddress
+set-config ipaddress type-your-local-api-address-here
+
+# Set your local api port
+set-config port type-your-local-api-port-here
+
+# Set your local api secret
+set-config secret your-local-api-secret-here
 ```
 
-Finally you will need to select the correct exchange for the bot to test against. You want this to
-be the same exchange associated with the account guid you have selected. Modify the following settings
+Example Output:
+![ExampleSetupOutput](https://i.imgur.com/tsqvE7c.png)
+
+Now Test your settings to ensure connection is succesfull
 
 ```
-"ExchangeSelection":1
+# Test Connection Settings
+test-creds
 ```
 
-With one of the following values to match your exchange.
+Example Output:
+
+![ExampleTestCredsOutput](https://i.imgur.com/WUvEDCu.png)
+
+Next you need to pick a wallet/account in haas which PPScreener will use, a simulated account/wallet is recommended (Note you need to set these accounts/wallets up in Haas yourself, this program won’t do it for you)
 
 ```
-Bitfinex = 1
-BTCe = 4
-CexIO = 5
-OKCoinCOM = 8
-OKCoinFutures = 9
-Bitstamp = 10
-Poloniex = 11
-Coinbase = 12
-Bittrex = 13
-NovaExchange = 14
-Kraken = 15
-BitMEX = 17
-ScriptedDriver = 18
-CCex = 19
-Gemini = 20
-Binance = 21
-HitBTC = 22
-OKEX = 23
-Huobi = 26
-KuCoin = 27
+# See a list of avalible accounts
+show-accounts
 ```
 
-### Additional Configuration
+Example Output:
+![ExampleShowAccounts](https://i.imgur.com/uSEYdFC.png)
 
-The Bot also supports additional configuration options that are listed below.
+Then we select an account
 
 ```
-# The delay between each BackTest in seconds. By default this is set to 1 second.
-# You can increase this if you have a slower machine and need a longer delay between test.
-# Note: If you decrease these please ensure you have a fast enough machine
-"DelayBTInMiliseconds":3000
+# Selects an account
+set-account type-the-account-index-number
+```
 
-# The Keep Threshold is what percentage does the backtest ROI have to be higher than
-# In order for the bot to not be automatically deleted. Default is 2%
-"KeepThreshold":2.0
+Example Output:
+![ExampleSelectAccount](https://i.imgur.com/tR2OWWg.png)
 
-# The PrimarySecondaryCurrency (Yeah the name sucks) this is the base coin for the market
-# For example this can be BTC,ETH,LTC,BNB,ETC
-"PrimarySecondaryCurrency":"BTC"
+Here you set the ROI (return on investment) target the backtested bots must reach before the automatically created and tested bots this program creates will keep the bots (that reached the target after testing) in your botlist under Ping Pong bots. Note you have to type a % of your choosing, this example is 3% but you can type decimals as well like 2.5
 
-# This is the fee to be used when calculating the ROI and setting up the bot
-# By default its set to 0.1% (Binance)
-"Fee":0.1
+```
+# Set the keeptreshold (What Roi Bots To Keep) Ex. For 3% we set 3.0
+set-config keepthreshold 3.0
 
-# This is the timeframe to backtest in minutes.
-# By default it is set to 1 day.
-"MinutesToBackTest":1440
+# Set to persist bots (Keep bots that are above keepthreshold in bot list)
+set-config persistbots true
+```
 
-# In order to backtest a market haas must first download the market information
-# Force haas to download market data before performing our testing.
-# Default is set to false.
-"CollectDataFirst":false
+Now to choose on which market in the chosen exchange to test all the coins against: USD, BTC, ETH, USDT, etc. In this example we choose BTC markets
 
-# For convience and history we have the option to log everything to a file
-# Default is True
-"WriteToFile":true
+```
+# Set the base currency to use (BTC,ETH,ETC)
+set-config primarycurrency type-chosen-market
+```
+
+Finally we start the screener
+
+```
+# Start the testing process
+start
+```
+
+Example Output:
+![ExampleStartOutput](https://i.imgur.com/xCwOgBw.png)
+
+### Advanced Commands
+
+######Backtest Delay
+The delay in milliseconds between each conducted backtest of bots created by this program
+note that 1second = 1000 milliseconds
+```
+set-config backtestdelay type-amount-in-milliseconds
+example: set-config backtestdelay 500
+```
+
+######Set the exchange fee
+To set the fee of the exchange/wallet you are on. For example 0.25% for bittrex (at the time of writing)
+```
+set-config fee type-number-and-decimal
+Example: set-config fee 0.25 is 0.25%
+```
+
+######Save PPScreener backtest history
+This will depending on the true or false setting save the backtests conducted by PPScreener to a CSV file
+```
+set-config writeresultstofile true/false
+Example: set-config writeresultstofile true would result in the file being saved
+```
+
+
+######Set retry on receiving market data
+How many times to retry receiving the market
+```
+set-config retrycount type-amount-number 
+Example: set-config retrycount 10 will retry 10 times
 ```
