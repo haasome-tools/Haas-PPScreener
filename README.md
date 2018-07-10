@@ -100,7 +100,7 @@ Example Output:
 
 ### Advanced Commands
 
-####Backtest Delay
+#### Backtest Delay
 The delay in milliseconds between each conducted backtest of bots created by this program
 note that 1second = 1000 milliseconds
 ```
@@ -108,14 +108,14 @@ set-config backtestdelay type-amount-in-milliseconds
 example: set-config backtestdelay 500
 ```
 
-####Set the exchange fee
+#### Set the exchange fee
 To set the fee of the exchange/wallet you are on. For example 0.25% for bittrex (at the time of writing)
 ```
 set-config fee type-number-and-decimal
 Example: set-config fee 0.25 is 0.25%
 ```
 
-####Save PPScreener backtest history
+#### Save PPScreener backtest history
 This will depending on the true or false setting save the backtests conducted by PPScreener to a CSV file
 ```
 set-config writeresultstofile true/false
@@ -123,7 +123,7 @@ Example: set-config writeresultstofile true would result in the file being saved
 ```
 
 
-####Set retry on receiving market data
+#### Set retry on receiving market data
 How many times to retry receiving the market
 ```
 set-config retrycount type-amount-number 
