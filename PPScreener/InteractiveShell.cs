@@ -119,7 +119,7 @@ namespace PPScreener
                         int backtestlength_dead = 0;
                         if (Int32.TryParse(arguments[1], out backtestlength_dead))
                         {
-                            ActionManager.SetConfigBacktestDelay(Convert.ToInt32(arguments[1]));
+                            ActionManager.SetConfigBackTestLength(Convert.ToInt32(arguments[1]));
                             Console.WriteLine("[*] Backtest Length Set To {0}", arguments[1]);
                         }
                         else
