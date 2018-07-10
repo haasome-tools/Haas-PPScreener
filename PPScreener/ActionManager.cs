@@ -272,6 +272,55 @@ namespace PPScreener
 
         }
 
+        public static List<BaseCustomBot> GetAllCustomBots()
+        {
+            if (ActionManager.CheckHaasConnection())
+            {
+                HaasonlineClient haasonlineClient = new HaasonlineClient(ActionManager.mainConfig.IPAddress, ActionManager.mainConfig.Port, ActionManager.mainConfig.Secret);
+
+                var getAllCustomBotsTask = Task.Run(async () => await haasonlineClient.CustomBotApi.GetAllBots());
+
+                getAllCustomBotsTask.Wait();
+
+                return getAllCustomBotsTask.Result.Result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+        public static BaseCustomBot GetCustomBotByName(string botName)
+        {
+
+            if (ActionManager.CheckHaasConnection())
+            {
+                // Find active bot markets
+                foreach (var bot in ActionManager.GetAllCustomBots())
+                {
+                    if (bot.Name.Equals(botName))
+                    {
+                        return bot;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+
+        public static void DeleteBot(string botGuid)
+        {
+            if (ActionManager.CheckHaasConnection())
+            {
+                HaasonlineClient haasonlineClient = new HaasonlineClient(ActionManager.mainConfig.IPAddress, ActionManager.mainConfig.Port, ActionManager.mainConfig.Secret);
+                var deleteTask = Task.Run(async () => await haasonlineClient.CustomBotApi.RemoveBot(botGuid));
+
+                deleteTask.Wait();
+            }
+        }
+
         public static void CreatePersistentBot(string market)
         {
             string[] accountGuidSplit = ActionManager.mainConfig.AccountGUID.Split('-');

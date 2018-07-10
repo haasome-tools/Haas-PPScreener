@@ -429,6 +429,33 @@ namespace PPScreener
             }
         }
 
+        [CmdCommand(Command = "remove-all-bots", Description = StaticStrings.REMOVE_ALL_BOTS_HELP_TEXT)]
+        public void RemoveAllBotsCommand(string arg)
+        {
+            string[] accountGuidSplit = ActionManager.mainConfig.AccountGUID.Split('-');
+
+
+            var customBots = ActionManager.GetAllCustomBots();
+
+            var markets = ActionManager.GetMarkets();
+
+            Console.WriteLine("[*] Deleteing All Bots Managed By BruteScalpe");
+
+            foreach (var market in markets)
+            {
+
+                string botName = "PP-" + accountGuidSplit[0] + "-" + market + ":" + ActionManager.mainConfig.PrimaryCurrency;
+
+                var customBot = ActionManager.GetCustomBotByName(botName);
+
+                if (customBot != null)
+                {
+                    ActionManager.DeleteBot(customBot.GUID);
+                }
+
+            }
+        }
+
         public InteractiveShell()
         {
 

@@ -20,6 +20,7 @@ namespace PPScreener
         public const string SET_ACCOUNT_HELP_TEXT = "Set Active Account";
         public const string SHOW_MARKETS_HELP_TEXT = "Show Current Markets";
         public const string START_SCREENER_HELP_TEXT = "Start Screener";
+        public const string REMOVE_ALL_BOTS_HELP_TEXT = "Remove All PP Bots";
 
 
     }
