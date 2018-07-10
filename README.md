@@ -122,10 +122,15 @@ set-config writeresultstofile true/false
 Example: set-config writeresultstofile true would result in the file being saved
 ```
 
-
 #### Set retry on receiving market data
 How many times to retry receiving the market
 ```
 set-config retrycount type-amount-number 
 Example: set-config retrycount 10 will retry 10 times
+```
+
+#### Remove all bots created by ppscreener
+Remove all the bots
+```
+remove-all-bots
 ```
