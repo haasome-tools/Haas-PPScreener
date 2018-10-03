@@ -1,6 +1,7 @@
 ﻿using Haasonline.Public.LocalApi.CSharp;
 using Haasonline.Public.LocalApi.CSharp.DataObjects.AccountData;
 using Haasonline.Public.LocalApi.CSharp.DataObjects.CustomBots;
+using Haasonline.Public.LocalApi.CSharp.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -155,7 +156,7 @@ namespace PPScreener
 
             var accounts = haasonlineClient.AccountDataApi.GetEnabledAccounts();
 
-            if (accounts.Result.ErrorCode == Haasonline.LocalApi.CSharp.Enums.EnumErrorCode.Success)
+            if (accounts.Result.ErrorCode == EnumErrorCode.Success)
             {
                 if (ActionManager.GetAccountGUIDS().Count > 0)
                 {
